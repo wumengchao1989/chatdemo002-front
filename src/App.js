@@ -15,6 +15,7 @@ function App() {
         <button onClick={handleClick}>click</button>
         <img src={logo} className="App-logo" alt="logo" />
         <p>
+          azure update
           Myname is {name}
         </p>
         <a
