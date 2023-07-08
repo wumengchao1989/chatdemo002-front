@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Avatar, Divider, List, Skeleton } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
-const ChatBox = (props) => {
-  const [loading, setLoading] = useState(false);
-
-  const [data, setData] = useState([
+const ChatBox = () => {
+  const data = [
     {
       userName: "Jack",
       reverse: false,
@@ -21,7 +19,7 @@ const ChatBox = (props) => {
       userName: "Jack",
       reverse: true,
     },
-  ]);
+  ];
   const loadMoreData = () => {
     console.log("load more");
     return;
