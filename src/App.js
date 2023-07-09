@@ -1,14 +1,14 @@
 import React from "react";
 import { Layout, Space, Menu } from "antd";
-import ChatBox from "./components/chatbox/ChatBox";
 import "./App.css";
-import Navigation from "./components/navigation/Navigation";
-const { Header, Footer, Sider, Content } = Layout;
+import { Outlet } from "react-router-dom";
+
+const { Header, Footer } = Layout;
 function App() {
   const items1 = [
-    { key: "1", label: "help center bot" },
+    { key: "1", label: <a href="/helpcenterbot">{"help center bot"}</a> },
     { key: "2", label: "Dashboard Analysis" },
-    { key: "3", label: "Dashboard Analysis" },
+    { key: "3", label: "Architecture Design" },
   ];
   return (
     <div className="App" style={{ height: "100%" }}>
@@ -26,21 +26,7 @@ function App() {
               items={items1}
             />
           </Header>
-          <Layout hasSider>
-            <Sider width={200} style={{ background: "#fff" }}>
-              <Navigation />
-            </Sider>
-            <Content
-              style={{
-                padding: 24,
-                margin: 0,
-                minHeight: "100%",
-                background: "#fff",
-              }}
-            >
-              <ChatBox />
-            </Content>
-          </Layout>
+          <Outlet />
           <Footer style={{ textAlign: "center" }}>
             AI Bot Palyground ©2023 Created by Mark Wu
           </Footer>
