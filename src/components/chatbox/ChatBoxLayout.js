@@ -1,27 +1,36 @@
 import React from "react";
 import ChatBox from "./ChatBox";
-import { Layout } from "antd";
+import { Layout, Spin } from "antd";
 import Navigation from "../navigation/Navigation";
 
 const { Sider, Content } = Layout;
 
 const ChatBoxLayout = () => {
+  const [loading, setLoading] = React.useState(false);
   return (
-    <Layout hasSider>
-      <Sider width={200} style={{ background: "#fff" }}>
-        <Navigation />
-      </Sider>
-      <Content
-        style={{
-          padding: 24,
-          margin: 0,
-          minHeight: "100%",
-          background: "#fff",
-        }}
+    <div style={{ height: "100%" }}>
+      <Spin
+        spinning={loading}
+        tip="Please wait bot initialization..."
+        style={{ height: "100%" }}
       >
-        <ChatBox />
-      </Content>
-    </Layout>
+        <Layout hasSider>
+          <Sider width={200} style={{ background: "#fff", height: "100%" }}>
+            <Navigation setLoading={setLoading} />
+          </Sider>
+          <Content
+            style={{
+              padding: 24,
+              margin: 0,
+              minHeight: "100%",
+              background: "#fff",
+            }}
+          >
+            <ChatBox />
+          </Content>
+        </Layout>
+      </Spin>
+    </div>
   );
 };
 

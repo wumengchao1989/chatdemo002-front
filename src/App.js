@@ -6,9 +6,9 @@ import { Outlet } from "react-router-dom";
 const { Header, Footer } = Layout;
 function App() {
   const items1 = [
-    { key: "1", label: <a href="/helpcenterbot">{"help center bot"}</a> },
-    { key: "2", label: "Dashboard Analysis" },
-    { key: "3", label: "Architecture Design" },
+    { key: "1", label: <a href="/chatbox">help center bot</a> },
+    { key: "2", label: <a href="/dashboardanalysis">Dashboard Analysis</a> },
+    { key: "3", label: <a href="/archdesign">Architecture Design</a> },
   ];
   return (
     <div className="App" style={{ height: "100%" }}>
@@ -19,12 +19,7 @@ function App() {
       >
         <Layout style={{ height: "100%" }}>
           <Header>
-            <Menu
-              theme="dark"
-              mode="horizontal"
-              defaultSelectedKeys={["2"]}
-              items={items1}
-            />
+            <Menu theme="dark" mode="horizontal" items={items1} />
           </Header>
           <Outlet />
           <Footer style={{ textAlign: "center" }}>

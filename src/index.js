@@ -6,6 +6,8 @@ import reportWebVitals from "./reportWebVitals";
 import ChatBoxLayout from "./components/chatbox/ChatBoxLayout";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
+import DashboardAnalysisLayout from "./components/dashboardanalysis/DashboardanalysisLayout";
+import ArchDesignLayout from "./components/archdesign/ArchdesignLayout";
 
 const router = createBrowserRouter([
   {
@@ -13,8 +15,20 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "helpcenterbot",
+        path: "",
         element: <ChatBoxLayout />,
+      },
+      {
+        path: "/chatbox/:chatid",
+        element: <ChatBoxLayout />,
+      },
+      {
+        path: "dashboardanalysis",
+        element: <DashboardAnalysisLayout />,
+      },
+      {
+        path: "archdesign",
+        element: <ArchDesignLayout />,
       },
     ],
   },
