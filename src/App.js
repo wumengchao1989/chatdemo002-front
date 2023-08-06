@@ -2,13 +2,13 @@ import React from "react";
 import { Layout, Space, Menu } from "antd";
 import "./App.css";
 import { Outlet } from "react-router-dom";
-
 const { Header, Footer } = Layout;
 function App() {
   const items1 = [
     { key: "1", label: <a href="/chatbox">help center bot</a> },
-    { key: "2", label: <a href="/dashboardanalysis">Dashboard Analysis</a> },
-    { key: "3", label: <a href="/archdesign">Architecture Design</a> },
+    { key: "2", label: <a href="/autoupgrade">Auto Upgrade</a> },
+    { key: "3", label: <a href="/dashboardanalysis">Dashboard Analysis</a> },
+    { key: "4", label: <a href="/archdesign">Architecture Design</a> },
   ];
   return (
     <div className="App" style={{ height: "100%" }}>

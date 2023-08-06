@@ -65,7 +65,16 @@ const ChatBox = () => {
     return (
       <List.Item key={item.email} className={listItemClassnames}>
         <List.Item.Meta
-          avatar={<Avatar>{item.userName}</Avatar>}
+          avatar={
+            <Avatar
+              style={{
+                backgroundColor:
+                  item.role === "assistant" ? "#1677ff" : "#87d068",
+              }}
+            >
+              {item.userName}
+            </Avatar>
+          }
           title={item.userName}
           description={item.message}
         />

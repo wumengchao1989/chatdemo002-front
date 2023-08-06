@@ -8,6 +8,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import DashboardAnalysisLayout from "./components/dashboardanalysis/DashboardanalysisLayout";
 import ArchDesignLayout from "./components/archdesign/ArchdesignLayout";
+import AutoUpgradeLayout from "./components/autoupgrade/AutoUpgradeLayout";
 
 const router = createBrowserRouter([
   {
@@ -19,7 +20,11 @@ const router = createBrowserRouter([
         element: <ChatBoxLayout />,
       },
       {
-        path: "/chatbox/:chatid",
+        path: "/autoupgrade",
+        element: <AutoUpgradeLayout />,
+      },
+      {
+        path: "/chatbox/:chatid?",
         element: <ChatBoxLayout />,
       },
       {
