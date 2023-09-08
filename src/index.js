@@ -9,6 +9,7 @@ import "./index.css";
 import DashboardAnalysisLayout from "./components/dashboardanalysis/DashboardanalysisLayout";
 import ArchDesignLayout from "./components/archdesign/ArchdesignLayout";
 import AutoUpgradeLayout from "./components/autoupgrade/AutoUpgradeLayout";
+import AiInstructor from "./components/aiinstructor/aiInstructor";
 
 const router = createBrowserRouter([
   {
@@ -35,15 +36,15 @@ const router = createBrowserRouter([
         path: "archdesign",
         element: <ArchDesignLayout />,
       },
+      {
+        path: "ai_instructor",
+        element: <AiInstructor />,
+      },
     ],
   },
 ]);
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
-);
+root.render(<RouterProvider router={router} />);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
