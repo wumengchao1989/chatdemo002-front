@@ -1,61 +1,47 @@
 import React from "react";
-import { Layout, Button } from "antd";
+import { Layout, FloatButton } from "antd";
 import ReactPlayer from "react-player/lazy";
-import RecordRTC, { StereoAudioRecorder } from "recordrtc";
 import containerClient from "./utils";
-import Recorder from "js-audio-recorder";
+import { AudioOutlined } from "@ant-design/icons";
+import recorder from "./recorder";
+import ChatBox from "../chatbox/ChatBox";
+import { v4 as uuidv4 } from "uuid";
 
 const { Content } = Layout;
 
+import { post } from "../../axios";
+
 const AiInstructor = () => {
+  const [pressDown, setPressDown] = React.useState(false);
+
   const recordStart = () => {
-    const recorder = new Recorder({
-      sampleBits: 16, // 采样位数，支持 8 或 16，默认是16
-      sampleRate: 16000, // 采样率，支持 11025、16000、22050、24000、44100、48000，根据浏览器默认值，我的chrome是48000
-      numChannels: 1,
-    });
+    setPressDown(true);
     recorder.start().then(
       async () => {
-        // 开始录音
-        console.log("开始录音了=========");
-        const sleep = (m) => new Promise((r) => setTimeout(r, m));
-        await sleep(10000);
-        recorder.stop();
+        const sleep = (m) => {
+          return new Promise((r) => setTimeout(r, m));
+        };
+        await sleep(5000);
         let wavBlob = recorder.getWAVBlob();
-        const blockBlobClient =
-          containerClient.getBlockBlobClient("test004.wav");
-        blockBlobClient.uploadData(wavBlob);
+        const bolbName = `speech004-${uuidv4()}.wav`;
+        const blockBlobClient = containerClient.getBlockBlobClient(bolbName);
+        blockBlobClient.uploadData(wavBlob).then((res) => {
+          if (res._response.status === 201) {
+            post("/illustarte/send_illustrate_message", { bolbName }).then(
+              (res) => {}
+            );
+          }
+        });
       },
       (error) => {
         // 出错了
         console.log(error);
       }
     );
-    // navigator.mediaDevices
-    //   .getUserMedia({
-    //     audio: true,
-    //   })
-    //   .then(async function (stream) {
-    //     let recorder = RecordRTC(stream, {
-    //       type: "audio",
-    //       mimeType: "audio/wav",
-    //       desiredSampRate: 16 * 1000,
-    //       recorder: StereoAudioRecorder,
-    //       sampleBits: 16,
-    //       disableLogs: true,
-    //     });
-    //     recorder.startRecording();
-
-    //     const sleep = (m) => new Promise((r) => setTimeout(r, m));
-    //     await sleep(10000);
-
-    //     recorder.stopRecording(function () {
-    //       let blob = recorder.getBlob();
-    //       const blockBlobClient =
-    //         containerClient.getBlockBlobClient("test004.wav");
-    //       blockBlobClient.uploadData(blob);
-    //     });
-    //   });
+  };
+  const recordEnd = () => {
+    recorder.stop();
+    setPressDown(false);
   };
   return (
     <Layout>
@@ -67,10 +53,33 @@ const AiInstructor = () => {
           background: "#fff",
         }}
       >
-        <div>
-          <ReactPlayer url="/avatarvideo.mp4" loop muted playing />
-          <Button onClick={recordStart}>record</Button>
+        <div style={{ display: "flex", width: "100%" }}>
+          <ReactPlayer
+            width={400}
+            height={500}
+            url="/avatarvideo.mp4"
+            loop
+            muted
+            playing
+          />
+          <div style={{ width: "80%", height: 980 }}>
+            <ChatBox noMessageInput isIllustrate />
+          </div>
         </div>
+        <FloatButton
+          type="danger"
+          icon={<AudioOutlined style={{ color: "#fff" }} />}
+          onMouseDown={recordStart}
+          onMouseUp={recordEnd}
+          onBlur={() => console.log("blur")}
+          style={
+            pressDown
+              ? { boxShadow: "none", backgroundColor: "#f5222d" }
+              : { backgroundColor: "#ff4d4f" }
+          }
+        >
+          record
+        </FloatButton>
       </Content>
     </Layout>
   );

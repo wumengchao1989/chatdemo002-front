@@ -1,12 +1,13 @@
 // eslint-disable-next-line
 import React, { useEffect } from "react";
-import { Menu, Button, Popover, message } from "antd";
+import { Menu, Button, Popover, message, Modal, Radio } from "antd";
 import { get, post } from "../../axios";
 import { Link, useNavigate } from "react-router-dom";
 const Navigation = (props) => {
   const { setLoading } = props;
   const [menuItems, setMenuItems] = React.useState([]);
   const [messageApi, contextHolder] = message.useMessage();
+  const [role, setRole] = React.useState("developer");
   const navigate = useNavigate();
   const handleDeleteChatGroups = (e, id) => {
     e.preventDefault();
@@ -61,7 +62,7 @@ const Navigation = (props) => {
   const addNewChat = async () => {
     setLoading(true);
     post("/add_chat_groups", {
-      chatGroupTitle: `chat${menuItems.length + 1}`,
+      chatGroupTitle: `Copilot chat ${menuItems.length + 1}`,
     }).then((res) => {
       if (res.success) {
         const { _id } = res.res;
@@ -69,6 +70,7 @@ const Navigation = (props) => {
           prompt: "",
           chatGroupId: _id,
           is_init: true,
+          role,
         }).then(() => {
           getChatGroups().then(() => {
             navigate(`/chatbox/${_id}`);
@@ -78,11 +80,31 @@ const Navigation = (props) => {
       }
     });
   };
+  const handleSelectRole = (event) => {
+    setRole(event.target.value);
+  };
+
+  const info = () => {
+    const plainOptions = ["Developer", "Designer", "Product Manager"];
+    Modal.info({
+      title: "Please select your role let the copliot better assist you",
+      content: (
+        <div>
+          <Radio.Group options={plainOptions} onChange={handleSelectRole} />
+        </div>
+      ),
+      onOk() {
+        addNewChat();
+      },
+    });
+  };
 
   return (
     <div style={{ height: "100%", marginTop: 32 }}>
       {contextHolder}
-      <Button onClick={addNewChat}>New Chat</Button>
+      <Button type="primary" style={{ marginLeft: 64 }} onClick={info}>
+        New Chat
+      </Button>
       <Menu style={{ height: "100%", marginTop: 8 }} items={menuItems} />
     </div>
   );

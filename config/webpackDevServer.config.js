@@ -105,6 +105,10 @@ module.exports = function (proxy, allowedHost) {
         target: "http://127.0.0.1:8080",
         changeOrigin: true,
       },
+      "/audio": {
+        target: "http://127.0.0.1:8080",
+        changeOrigin: true,
+      },
     },
     onBeforeSetupMiddleware(devServer) {
       // Keep `evalSourceMapMiddleware`

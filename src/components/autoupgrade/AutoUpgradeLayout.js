@@ -77,11 +77,13 @@ const AutoUpgradeLayout = () => {
         const phase = res.result.phase;
         const currentProgressInfo = progressInfo;
         const prevPhase = currentPhaseRef.current;
-        if (phase && Number(prevPhase) < Number(phase) && Number(phase) < 4) {
+        if (phase && Number(prevPhase) < Number(phase) && Number(phase) <= 4) {
           currentProgressInfo[Number(prevPhase)].isCompleted = true;
           currentProgressInfo[Number(prevPhase)].percent = 100;
-          currentProgressInfo[Number(prevPhase)].showLoading = false;
-          currentProgressInfo[Number(phase)].showLoading = true;
+          if (currentProgressInfo[Number(prevPhase)])
+            currentProgressInfo[Number(prevPhase)].showLoading = false;
+          if (currentProgressInfo[Number(phase)])
+            currentProgressInfo[Number(phase)].showLoading = true;
           setProgressInfo(currentProgressInfo);
           setCurrentPhase(phase);
           setUpgradeProgress(Number(phase) * 25);

@@ -10,6 +10,7 @@ import DashboardAnalysisLayout from "./components/dashboardanalysis/Dashboardana
 import ArchDesignLayout from "./components/archdesign/ArchdesignLayout";
 import AutoUpgradeLayout from "./components/autoupgrade/AutoUpgradeLayout";
 import AiInstructor from "./components/aiinstructor/aiInstructor";
+import Demo from "./components/demo";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: "ai_instructor",
         element: <AiInstructor />,
+      },
+      {
+        path: "demo",
+        element: <Demo />,
       },
     ],
   },

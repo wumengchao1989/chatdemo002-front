@@ -6,9 +6,17 @@ import ClassNames from "classnames";
 import { get, post } from "../../axios";
 import { useParams } from "react-router-dom";
 import { Input } from "antd";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { darcula } from "react-syntax-highlighter/dist/esm/styles/prism";
+import ReactAudioPlayer from "react-audio-player";
+
+const chatId = "64ffef6ece40662d8a3069c7";
 
 const { TextArea } = Input;
-const ChatBox = () => {
+const ChatBox = (props) => {
+  const { noMessageInput, isIllustrate } = props;
   const { chatid } = useParams();
   const [data, setData] = useState([]);
   const [textareaLoading, setTextAreaLoading] = useState(false);
@@ -28,6 +36,34 @@ const ChatBox = () => {
       });
     }
   };
+  useEffect(() => {
+    if (!isIllustrate) return;
+    get("/illustrate/get_illustrate_chat_groups", { id: chatId }).then(
+      (res) => {
+        if (res.success === true) {
+          if (res.res && res.res.chatMessages) {
+            setData(res.res.chatMessages);
+          } else {
+            setData([]);
+          }
+        }
+      }
+    );
+    setInterval(() => {
+      console.log("hello");
+      get("/illustrate/get_illustrate_chat_groups", { id: chatId }).then(
+        (res) => {
+          if (res.success === true) {
+            if (res.res && res.res.chatMessages) {
+              setData(res.res.chatMessages);
+            } else {
+              setData([]);
+            }
+          }
+        }
+      );
+    }, 2000);
+  }, []);
   useEffect(() => {
     loadMoreData();
   }, [chatid]);
@@ -60,10 +96,11 @@ const ChatBox = () => {
     setInputValue(e.target.value);
   };
 
-  const itemRenderer = (item) => {
+  const itemRenderer = (item, index) => {
     const listItemClassnames = ClassNames({ reverse: !item.reverse });
+    console.log(item);
     return (
-      <List.Item key={item.email} className={listItemClassnames}>
+      <List.Item key={index} className={listItemClassnames}>
         <List.Item.Meta
           avatar={
             <Avatar
@@ -76,8 +113,40 @@ const ChatBox = () => {
             </Avatar>
           }
           title={item.userName}
-          description={item.message}
+          description={
+            <ReactMarkdown
+              remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
+              children={item.message}
+              components={{
+                code({ node, inline, className, children, ...props }) {
+                  const match = /language-(\w+)/.exec(className || "");
+                  return !inline && match ? (
+                    <SyntaxHighlighter
+                      {...props}
+                      children={String(children).replace(/\n$/, "")}
+                      style={darcula}
+                      language={match[1]}
+                      PreTag="div"
+                    />
+                  ) : (
+                    <code {...props} className={className}>
+                      {children}
+                    </code>
+                  );
+                },
+              }}
+            />
+          }
         />
+        {item.blobName}
+        {item.reverse ? (
+          <ReactAudioPlayer
+            src={`http://localhost:8081/audio/${item.bolbUrl}`}
+            controls
+          />
+        ) : (
+          ""
+        )}
       </List.Item>
     );
   };
@@ -95,17 +164,21 @@ const ChatBox = () => {
           <List dataSource={data} renderItem={itemRenderer} />
         </InfiniteScroll>
       </div>
-      <div className="textAreaContainer">
-        <Spin spinning={textareaLoading}>
-          <TextArea
-            placeholder="Please enter text you want to ask..."
-            value={inputValue}
-            onChange={handleChange}
-            autoSize={{ maxRows: 8, minRows: 8 }}
-            onPressEnter={handleSubmit}
-          />
-        </Spin>
-      </div>
+      {noMessageInput ? (
+        ""
+      ) : (
+        <div className="textAreaContainer">
+          <Spin spinning={textareaLoading}>
+            <TextArea
+              placeholder="Please enter text you want to ask..."
+              value={inputValue}
+              onChange={handleChange}
+              autoSize={{ maxRows: 8, minRows: 8 }}
+              onPressEnter={handleSubmit}
+            />
+          </Spin>
+        </div>
+      )}
     </div>
   );
 };

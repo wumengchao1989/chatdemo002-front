@@ -5,11 +5,12 @@ import { Outlet } from "react-router-dom";
 const { Header, Footer } = Layout;
 function App() {
   const items1 = [
-    { key: "1", label: <a href="/chatbox">help center bot</a> },
-    { key: "2", label: <a href="/autoupgrade">Auto Upgrade</a> },
+    { key: "1", label: <a href="/chatbox">Copilot</a> },
+    { key: "2", label: <a href="/autoupgrade">Auto Upgrader</a> },
     { key: "3", label: <a href="/dashboardanalysis">Dashboard Analysis</a> },
     { key: "4", label: <a href="/archdesign">Architecture Design</a> },
     { key: "5", label: <a href="/ai_instructor">AI Instructor</a> },
+    { key: "6", label: <a href="/demo">Demo</a> },
   ];
   return (
     <div className="App" style={{ height: "100%" }}>
@@ -24,7 +25,7 @@ function App() {
           </Header>
           <Outlet />
           <Footer style={{ textAlign: "center" }}>
-            AI Bot Palyground ©2023 Created by Mark Wu
+            AI Bot PlayGround ©2023 Created by Mark Wu
           </Footer>
         </Layout>
       </Space>
