@@ -16,11 +16,12 @@ const chatId = "64ffef6ece40662d8a3069c7";
 
 const { TextArea } = Input;
 const ChatBox = (props) => {
-  const { noMessageInput, isIllustrate } = props;
+  const { noMessageInput, isIllustrate, setPlaying, setShowLoading } = props;
   const { chatid } = useParams();
   const [data, setData] = useState([]);
   const [textareaLoading, setTextAreaLoading] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const currentDataRef = React.useRef([]);
   const loadMoreData = () => {
     if (chatid) {
       get("/get_chat_groups", { id: chatid }).then((res) => {
@@ -29,6 +30,7 @@ const ChatBox = (props) => {
             setData(
               res.res.chatMessages.filter((msg) => msg.role !== "system")
             );
+            currentDataRef.current = res.res.chatMessages;
           } else {
             setData([]);
           }
@@ -43,6 +45,7 @@ const ChatBox = (props) => {
         if (res.success === true) {
           if (res.res && res.res.chatMessages) {
             setData(res.res.chatMessages);
+            currentDataRef.current = res.res.chatMessages;
           } else {
             setData([]);
           }
@@ -50,12 +53,21 @@ const ChatBox = (props) => {
       }
     );
     setInterval(() => {
-      console.log("hello");
       get("/illustrate/get_illustrate_chat_groups", { id: chatId }).then(
         (res) => {
           if (res.success === true) {
             if (res.res && res.res.chatMessages) {
+              console.log(currentDataRef.current);
+              const currentMessageCount = currentDataRef.current.filter(
+                (item) => item.reverse === true
+              ).length;
+              const nextCurrentMessageCount = res.res.chatMessages.filter(
+                (item) => item.reverse === true
+              ).length;
               setData(res.res.chatMessages);
+              if (nextCurrentMessageCount === currentMessageCount + 1) {
+                setShowLoading(false);
+              }
             } else {
               setData([]);
             }
@@ -98,7 +110,6 @@ const ChatBox = (props) => {
 
   const itemRenderer = (item, index) => {
     const listItemClassnames = ClassNames({ reverse: !item.reverse });
-    console.log(item);
     return (
       <List.Item key={index} className={listItemClassnames}>
         <List.Item.Meta
@@ -114,39 +125,46 @@ const ChatBox = (props) => {
           }
           title={item.userName}
           description={
-            <ReactMarkdown
-              remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
-              children={item.message}
-              components={{
-                code({ node, inline, className, children, ...props }) {
-                  const match = /language-(\w+)/.exec(className || "");
-                  return !inline && match ? (
-                    <SyntaxHighlighter
-                      {...props}
-                      children={String(children).replace(/\n$/, "")}
-                      style={darcula}
-                      language={match[1]}
-                      PreTag="div"
-                    />
-                  ) : (
-                    <code {...props} className={className}>
-                      {children}
-                    </code>
-                  );
-                },
-              }}
-            />
+            <div>
+              <ReactMarkdown
+                remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
+                children={item.message}
+                components={{
+                  code({ node, inline, className, children, ...props }) {
+                    const match = /language-(\w+)/.exec(className || "");
+                    return !inline && match ? (
+                      <SyntaxHighlighter
+                        {...props}
+                        children={String(children).replace(/\n$/, "")}
+                        style={darcula}
+                        language={match[1]}
+                        PreTag="div"
+                      />
+                    ) : (
+                      <code {...props} className={className}>
+                        {children}
+                      </code>
+                    );
+                  },
+                }}
+              />
+              {item.reverse && isIllustrate ? (
+                <ReactAudioPlayer
+                  src={`http://localhost:8081/audio/${item.bolbUrl}`}
+                  controls
+                  autoPlay
+                  onPlay={() => {
+                    setPlaying(true);
+                  }}
+                  onEnded={() => setPlaying(false)}
+                  onPause={() => setPlaying(false)}
+                />
+              ) : (
+                ""
+              )}
+            </div>
           }
         />
-        {item.blobName}
-        {item.reverse ? (
-          <ReactAudioPlayer
-            src={`http://localhost:8081/audio/${item.bolbUrl}`}
-            controls
-          />
-        ) : (
-          ""
-        )}
       </List.Item>
     );
   };

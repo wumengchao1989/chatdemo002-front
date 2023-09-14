@@ -85,7 +85,11 @@ const Navigation = (props) => {
   };
 
   const info = () => {
-    const plainOptions = ["Developer", "Designer", "Product Manager"];
+    const plainOptions = [
+      "Angular Developer",
+      "React Developer",
+      "UI/UX Designer",
+    ];
     Modal.info({
       title: "Please select your role let the copliot better assist you",
       content: (

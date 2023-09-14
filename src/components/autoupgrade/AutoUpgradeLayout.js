@@ -22,13 +22,13 @@ const AutoUpgradeLayout = () => {
       isCompleted: false,
     },
     {
-      title: "Install",
+      title: "Build",
       percent: 0,
       showLoading: false,
       isCompleted: false,
     },
     {
-      title: "Build",
+      title: "Code Scan",
       percent: 0,
       showLoading: false,
       isCompleted: false,
@@ -356,7 +356,7 @@ const AutoUpgradeLayout = () => {
                         format={() => item.title}
                         type="circle"
                         percent={item.percent}
-                        size={64}
+                        size={80}
                         onClick={() => handleClickProgress(index)}
                       />
                       <div

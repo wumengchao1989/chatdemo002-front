@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, FloatButton } from "antd";
+import { Layout, FloatButton, Spin } from "antd";
 import ReactPlayer from "react-player/lazy";
 import containerClient from "./utils";
 import { AudioOutlined } from "@ant-design/icons";
@@ -13,7 +13,8 @@ import { post } from "../../axios";
 
 const AiInstructor = () => {
   const [pressDown, setPressDown] = React.useState(false);
-
+  const [playing, setPlaying] = React.useState(false);
+  const [showLoading, setShowLoading] = React.useState(false);
   const recordStart = () => {
     setPressDown(true);
     recorder.start().then(
@@ -42,6 +43,7 @@ const AiInstructor = () => {
   const recordEnd = () => {
     recorder.stop();
     setPressDown(false);
+    setShowLoading(true);
   };
   return (
     <Layout>
@@ -60,10 +62,23 @@ const AiInstructor = () => {
             url="/avatarvideo.mp4"
             loop
             muted
-            playing
+            playing={playing}
           />
           <div style={{ width: "80%", height: 980 }}>
-            <ChatBox noMessageInput isIllustrate />
+            {showLoading ? (
+              <Spin
+                style={{ position: "absolute", left: "50%", top: "50%" }}
+                size="large"
+              />
+            ) : (
+              ""
+            )}
+            <ChatBox
+              noMessageInput
+              isIllustrate
+              setPlaying={setPlaying}
+              setShowLoading={setShowLoading}
+            />
           </div>
         </div>
         <FloatButton

@@ -11,6 +11,7 @@ import ArchDesignLayout from "./components/archdesign/ArchdesignLayout";
 import AutoUpgradeLayout from "./components/autoupgrade/AutoUpgradeLayout";
 import AiInstructor from "./components/aiinstructor/aiInstructor";
 import Demo from "./components/demo";
+import AIInstructorWelcome from "./components/aiinstructor/aiInstructorWelcome";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       },
       {
         path: "ai_instructor",
+        element: <AIInstructorWelcome />,
+      },
+      {
+        path: "ai_instructor_inner",
         element: <AiInstructor />,
       },
       {
